@@ -1,0 +1,71 @@
+@extends base.html
+
+<% block content %>
+<% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
+<% var session = ctx.getSession(); %>
+<h2>Общее</h2>
+<table class="table">
+    <tr>
+        <td>Идентификатор</td>
+        <td><#Molecule.hmid.encode(data.getMid())#></td>
+    </tr>
+    <tr>
+        <td>Идентификатор изменения</td>
+        <td><#Molecule.hid.encode(data.getId())#></td>
+    </tr>
+    <tr>
+        <td>Автор последнего изменения</td>
+        <td><#data.getUserName()#></td>
+    </tr>
+    <tr>
+        <td>Дата и время изменения</td>
+        <td><#data.getDate()#></td>
+    </tr>
+    <tr>
+        <td>Брутто-формула</td>
+        <td><#data.getFormula()#></td>
+    </tr>
+    <tr>
+        <td>Кодовое обозначение</td>
+        <td><#data.getCodeName()#></td>
+    </tr>
+    <tr>
+        <td>Рисунок соединения</td>
+        <td><img src="<#data.getPicture()#>"/></td>
+    </tr>
+    <tr>
+        <td>Общепринятое название</td>
+        <td><#data.getBaseName()#></td>
+    </tr>
+    <tr>
+        <td>Название по номенклатуре</td>
+        <td><#data.getNomeName()#></td>
+    </tr>
+    <tr>
+        <td>Название по номенклатуре (англ.)</td>
+        <td><#data.getNomeNameEng()#></td>
+    </tr>
+    <tr>
+        <td>Ключевые слова</td>
+        <td><% for(var i = 0; i < data.getKeywords().size(); i++) { %><span class="badge"><#data.getKeywords().get(i).getName()#></span><% } %></td>
+    </tr>
+    <tr>
+        <td>Класс</td>
+        <td><% for(var i = 0; i < data.getMClasses().size(); i++) { %><span class="badge"><#data.getMClasses().get(i).getName()#></span><% } %></td>
+    </tr>
+</table>	
+<h2>Содержимое</h2>
+<div><# data.getContent() #></div>
+<h2>Литература</h2>
+<div><# data.getLiterature() #></div>
+<h2></h2>
+<div class="btn-group">
+    <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Действия<span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="<#api.that('changes/'+Molecule.hmid.encode(data.getMid()))#>">Просмотреть все изменения</a></li>
+        <% if(session.test('user-logined', true)) { %><li><a href="<#api.that('edit/'+Molecule.hmid.encode(data.getMid()))#>">Редактировать</a></li>
+        <li class="divider"></li>
+        <li><a href="<#api.that('delete/'+Molecule.hmid.encode(data.getMid()))#>">Удалить</a></li><% } %>
+    </ul>
+</div>
+<% endblock %>

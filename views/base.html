@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html" />
+        <link href="<#api.asset('css/common.css')#>" rel="stylesheet" type="text/css" media="screen" />
+        <link href="<#api.asset('css/bootstrap.css')#>" rel="stylesheet" type="text/css" media="screen" />
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="<#api.asset('css/wysiwyg-editor.css')#>" />
+        <title>ДВФУ - Лаборатория электронного строения и квантовохимического моделирования</title>
+    </head>
+    <% var session = ctx.getSession(); %>
+    <body>
+        <div id="container">
+            <div id="header"><h1>База данных энергий ионизации валентных уровней</h1><p>Лаборатория электронного строения и квантовохимического моделирования</p><hr /></div>
+            <div id="left">
+                <h1>Навигация</h1>
+                <ul>
+                    <li><a href="<#api.that()#>">Главная</a></li>
+                    <li><a href="<#api.that('add')#>">Добавить молекулу</a></li>
+                    <li><a href="<#api.that('changes')#>">Список последних изменений</a></li>
+                    <li><a href="<#api.that('about')#>">Описание и инструкция</a></li>
+                    <li><a href="<#api.that('contacts')#>">Контакты</a></li>
+                    <li></li>
+                    <% if(session.test("user-logined", true)) { %>
+                    <li class="nav-login">Здравствуйте,<br><i> <#session.getString("user-name")#></i><br><a href="<#api.that('logout')#>">Выйти</a></li>
+                    <% } else { %><li><a href="<#api.that('login')#>">Войти</a></li><% } %>
+                </ul>
+            </div>
+            <div id="center">
+                <% block content %><% endblock %>
+		<div id="footer">Лаборатория электронного строения и квантовохимического моделирования, 2012-2015 гг.</div>
+            </div>
+        </div>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="<#api.asset('js/bootstrap.js')#>"></script>
+        <% block js %><% endblock %>
+    </body>
+</html>

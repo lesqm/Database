@@ -1,0 +1,46 @@
+use ru.lesqm.db.controllers
+
+
+// Static
+GET $/assets/(.*) asset(1)
+
+GET  $/                  view("index.html")
+GET  $/contacts/?        view("contacts.html")
+GET  $/about/?           view("about.html")
+GET  $/restricted        view("restricted.html")
+GET  $/404/?             view("404.html")
+
+
+// Authentication
+$/login/? {
+    GET  AuthController.login()
+    POST AuthController.loginProcess()
+}
+GET  $/logout/?                               AuthController.logoutProcess()
+
+
+// Views
+GET  $/changes/?                              ViewController.viewChangesAll()
+GET  $/changes/([a-zA-Z0-9]+)                 ViewController.viewChangesByHmid(1:String)
+
+GET  $/change/([a-zA-Z0-9]+)                  ViewController.viewByHid(1:String)
+
+GET  $/view/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)     ViewController.viewByHmidAndHid(1:String,2:String)
+GET  $/view/([a-zA-Z0-9]+)                    ViewController.viewByHmid(1:String)
+
+
+// Search
+GET  $/search/?                               SearchController.search()
+
+
+// Restricted edit
+$/(add|edit|delete|revert)(.*) {
+    AuthController.check()
+
+    GET  $/add/?                              EditController.add()
+    POST $/add/?                              EditController.addProcess()
+    GET  $/edit/([a-zA-Z0-9]+)                EditController.edit(1:String)
+    POST $/edit/([a-zA-Z0-9]+)                EditController.editProcess(1:String)
+    GET  $/delete/([a-zA-Z0-9]+)              EditController.deleteProcess(1:String)
+    GET  $/revert/([a-zA-Z0-9]+)              EditController.revertProcess(1:String)
+}

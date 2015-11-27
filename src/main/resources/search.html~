@@ -1,0 +1,71 @@
+@extend base.html
+
+{% block content %}
+{% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %}
+{% var session = context.getSession(); %}
+<h2>Поиск</h2>
+<form id="search" method="get" action="{#api.that('search')#}">
+	<div class="input-group">
+		<input type="text" class="form-control" name="q">
+		<span class="input-group-btn">
+			<input type="submit" class="btn btn-default" value="Найти" />
+		</span>
+	</div>
+</form>
+<table class="table">
+    <tr>
+        <td>Дата изменения</td>
+        <td>Идент. изменения</td>
+        <td>Идент. молекулы</td>
+        <td>Автор</td>
+        <td>Тип изменения</td>
+        <td>Брутто-формула</td>
+        <td>Общепринятое название</td>
+        <td>Название по меж. ном.</td>
+        <td></td>
+    </tr>
+    {% for(var i = 0; i < data.size(); i++ ) { %}
+    {% var m = data.get(i); 
+    var ctype = "неизвестно";
+    switch(m.getCtype()) {
+    case 0:
+    ctype = "создание"; break;
+    case 1:
+    ctype = "изменение"; break;
+    case 2:
+    ctype = "откат"; break;
+    case 3:
+    ctype = "удаление"; break;
+    } %}
+    <tr>
+        <td>{#m.getDate()#}</td>
+        <td>{% if(m.getCtype() != 3) { %}
+            <a href="{#api.that('view/'+Molecule.hmid.encode(m.getMid())+'/'+Molecule.hid.encode(m.getId()))#}">{#Molecule.hid.encode(m.getId())#}</a>
+            {% } else { %}
+            {#Molecule.hid.encode(m.getId())#}
+            {% } %}</td>
+        <td>{% if(m.getCtype() != 3) { %}
+            <a href="{#api.that('view/'+Molecule.hmid.encode(m.getMid()))#}">{#Molecule.hmid.encode(m.getMid())#}</a>
+            {% } else { %}
+            {#Molecule.hmid.encode(m.getMid())#}
+            {% } %}</td>
+        <td>{#m.getUserName()#}</td>
+        <td>{#ctype#}</td>
+        <td>{% if(m.getCtype() != 3) %}{#m.getFormulaJs()#}</td>
+        <td>{% if(m.getCtype() != 3) %}{#m.getBaseNameJs()#}</td>
+        <td>{% if(m.getCtype() != 3) %}{#m.getNomeNameJs()#}</td>
+        <td>
+            <div class="btn-group">
+                <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Действия<span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{#api.that('view/'+Molecule.hmid.encode(m.getMid())+'/'+Molecule.hid.encode(m.getId()))#}">Открыть</a></li>
+                    <li><a href="{#api.that('changes/'+Molecule.hmid.encode(m.getMid()))#}">Список изменений</a></li>
+                    {% if(session.test('user-logined', true)) { %}<li class="divider"></li>
+                    <li><a href="{#api.that('revert/'+Molecule.hid.encode(m.getId()))#}">Откатить на эту версию</a></li>{% } %}
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {% } %}
+</table>	
+{% endblock %}

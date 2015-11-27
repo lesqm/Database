@@ -1,0 +1,101 @@
+@extends base.html
+
+<% block content %>
+<h1>Редактирование</h1>
+<form class="form-horizontal" role="form" method="post">
+    <input type="hidden" name="fid" value="<# data.fid #>">
+    <div class="form-group">
+        <label for="inputGrossFormula" class="col-sm-4 control-label">Брутто-формула</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputGrossFormula" name="formula" value="<# data.m.getFormulaJs() #>">
+        </div>
+    </div>
+	<div class="form-group">
+        <label for="inputPicture" class="col-sm-4 control-label">Рисунок соединения</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputPicture" name="picture" value="<# data.m.getPictureJs() #>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCommonName" class="col-sm-4 control-label">Общепринятое название</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputCcommonName" name="baseName" value="<# data.m.getBaseNameJs() #>">
+        </div>
+    </div>
+	<div class="form-group">
+        <label for="inputCodeName" class="col-sm-4 control-label">Кодовое обозначение</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputCodeName" name="codeName" value="<# data.m.getCodeNameJs() #>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputNomenclatureName" class="col-sm-4 control-label">Название по номенклатуре</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputNomenclatureName" name="nomeName" value="<# data.m.getNomeNameJs() #>">
+        </div>
+    </div>
+	<div class="form-group">
+        <label for="inputNomenclatureNameEng" class="col-sm-4 control-label">Название по номенклатуре (англ.)</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputNomenclatureNameEng" name="nomeNameEng" value="<# data.m.getNomeNameEngJs() #>">
+        </div>
+    </div>
+
+    <% 
+    var keywords = "";
+    for(var i = 0; i < data.m.getKeywords().size(); i++) {
+    keywords += data.m.getKeywords().get(i).getName();
+    if(data.m.getKeywords().size() - i != 1) keywords += ", ";
+    }
+    %>
+    <div class="form-group">
+        <label for="inputKeywords" class="col-sm-4 control-label">Ключевые слова</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputKeywords" name="keywords" value="<# keywords #>">
+        </div>
+    </div>
+    <% 
+    var classes = "";
+    for(var i = 0; i < data.m.getMClasses().size(); i++) {
+    classes += data.m.getMClasses().get(i).getName();
+    if(data.m.getMClasses().size() - i != 1) classes += ", ";
+    }
+    %>
+    <div class="form-group">
+        <label for="inputClasses" class="col-sm-4 control-label">Класс</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputClasses" name="classes" value="<# classes #>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputTable" class="col-sm-4 control-label">Содержимое</label>
+        <div class="col-sm-8">
+            <textarea class="form-control" id="inputTable" name="content" rows="8" style="resize: vertical;"><# data.m.getContentJs() #></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputSources" class="col-sm-4 control-label">Литература</label>
+        <div class="col-sm-8">
+            <textarea class="form-control" id="inputSources" name="literature" rows="4" style="resize: vertical;"><# data.m.getLiteratureJs() #></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8">
+            <button type="submit" class="btn btn-default">Сохранить</button>
+        </div>
+    </div>
+</form>
+<% endblock %>
+<% block js %>
+<script type="text/javascript" src="<#api.asset('js/tinymce/tinymce.min.js')#>"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: "textarea",
+        plugins: [
+            "autolink lists link image preview",
+            "code fullscreen",
+            "media table paste"
+        ]
+    });
+</script>
+<% endblock %>

@@ -1,0 +1,17 @@
+@extends base.html
+
+<% block content %>
+<h1>Добро пожаловать!</h1>
+<p>Вы находитесь на сайте базы данных лаборатории электронного строения и квантовомеханического моделирования ДВФУ.<br><br>
+    Здесь собраны все экспериментальные и расчетные данные полученные методами фотоэлектронной спектроскопии.<br><br>
+<h1></h1>
+<form id="search" method="get" action="<#api.that('search')#>">
+	<div class="input-group">
+		<input type="text" class="form-control" name="q">
+		<span class="input-group-btn">
+			<input type="submit" class="btn btn-default" value="Найти" />
+		</span>
+	</div>
+</form>
+<i>Для поиска соединения ввидите брутто-формулу, например <b>NH3</b></i>
+<% endblock %>
