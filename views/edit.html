@@ -2,15 +2,14 @@
 
 <% block content %>
 <h1>Редактирование</h1>
-<form class="form-horizontal" role="form" method="post">
-    <input type="hidden" name="fid" value="<# data.fid #>">
+<form id="editForm" class="form-horizontal" role="form" method="post">
     <div class="form-group">
         <label for="inputGrossFormula" class="col-sm-4 control-label">Брутто-формула</label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="inputGrossFormula" name="formula" value="<# data.m.getFormulaJs() #>">
         </div>
     </div>
-	<div class="form-group">
+    <div class="form-group">
         <label for="inputPicture" class="col-sm-4 control-label">Рисунок соединения</label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="inputPicture" name="picture" value="<# data.m.getPictureJs() #>">
@@ -22,7 +21,7 @@
             <input type="text" class="form-control" id="inputCcommonName" name="baseName" value="<# data.m.getBaseNameJs() #>">
         </div>
     </div>
-	<div class="form-group">
+    <div class="form-group">
         <label for="inputCodeName" class="col-sm-4 control-label">Кодовое обозначение</label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="inputCodeName" name="codeName" value="<# data.m.getCodeNameJs() #>">
@@ -34,7 +33,7 @@
             <input type="text" class="form-control" id="inputNomenclatureName" name="nomeName" value="<# data.m.getNomeNameJs() #>">
         </div>
     </div>
-	<div class="form-group">
+    <div class="form-group">
         <label for="inputNomenclatureNameEng" class="col-sm-4 control-label">Название по номенклатуре (англ.)</label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="inputNomenclatureNameEng" name="nomeNameEng" value="<# data.m.getNomeNameEngJs() #>">
@@ -81,7 +80,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">
-            <button type="submit" class="btn btn-default">Сохранить</button>
+            <button id="btnSubmit" type="submit" class="btn btn-default">Сохранить</button>
         </div>
     </div>
 </form>
@@ -89,13 +88,49 @@
 <% block js %>
 <script type="text/javascript" src="<#api.asset('js/tinymce/tinymce.min.js')#>"></script>
 <script type="text/javascript">
-    tinymce.init({
-        selector: "textarea",
-        plugins: [
-            "autolink lists link image preview",
-            "code fullscreen",
-            "media table paste"
-        ]
+            tinymce.init({
+                selector: "textarea",
+                plugins: [
+                    "autolink lists link image preview",
+                    "code fullscreen",
+                    "media table paste"
+                ]
+            });
+    $("form#editForm").submit(function (e) {
+
+        $("#btnSubmit").prop('disabled', true);
+
+        tinyMCE.get("inputTable").save();
+        tinyMCE.get("inputSources").save();
+
+        var formData = {};
+        var Form = this;
+
+        $.each($('form#editForm').serializeArray(), function (_, kv) {
+            formData[kv.name] = kv.value;
+        });
+        console.log(formData);
+
+        $.ajax({
+            url: window.location.pathname,
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(formData),
+            success: function (data, msg) {
+                console.log(data);
+                $("form#editForm").html("Сохранено<br><br><a href=\"" + data.url + "\">Продолжить</a>");
+            },
+            error: function (jqXHR, msg, throws) {
+                console.log(jqXHR);
+                console.log(msg);
+                console.log(throws);
+                $("form#editForm").html("Ошибка");
+            }
+        });
+
+        e.preventDefault();
+        return false;
     });
 </script>
 <% endblock %>
