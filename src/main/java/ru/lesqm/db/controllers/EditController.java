@@ -84,7 +84,11 @@ public class EditController extends Controller {
             return notFoundDefault(ctx);
         }
 
-        m.setKeywords(db.getMoleculeKeywords(m.getId()));
+        List<Keyword> keywords = db.getMoleculeKeywords(m.getId());
+        List<MClass> mClasses = db.getMoleculeClasses(m.getId());
+
+        m.setKeywords(keywords == null ? new ArrayList<>() : keywords);
+        m.setMClasses(mClasses == null ? new ArrayList<>() : mClasses);
 
         return ok(view("edit.html", new EditorData(forms.generateFormId("edit"), m)));
     }
