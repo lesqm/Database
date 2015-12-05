@@ -1,26 +1,28 @@
 * { margin: 0; padding: 0; }
-BODY { background: #fff; width: 100%; height: 100%; font-family: Times New Roman, Tahoma; }
+BODY { background: #fff; width: 100%; height: 100%; font-family: Times New Roman, Tahoma; !important; }
 
 html, BODY, #container, #left { min-height: 100%; width: 100%; }
 H1, H2, H3, H4 { font-weight: normal; font-family: Tahoma; }
 H3, H4 { font-family: Times New Roman; }
-H1 { font-size: 25px; padding: 0px 0 0 0; }
-H2 { font-size: 20px; padding: 30px 0 0px 0; }
+H1 { font-size: 15px; padding: 0px 0 20px 0; }
+H2 { font-size: 20px; padding: 30px 0 20px 0; }
 P { padding: 15px 0 10px 0; }
 I { padding: 0px 0 0px 0; }
 #container { width: 1200px; margin: 0px auto; }
 
-#left { float: left; width: 250px; padding: 0px 0 0 50px; margin: 0px 0 0 0px; }
+#header { width: 850px; padding: 0px 0 0 50px; }
+#header H1 { padding: 25px 0 0px 0; }
+#header H2 { padding: 0px 0 0px 0; }
+#header HR { width: 1000px; padding: 0; margin: 0;}
+#left { float: left; width: 250px; padding: 0px 0 0 50px; margin: 20px 0 0 0px; }
 #left UL { list-style: none; font-size: 16px; }
 #left UL UL { font-size: 14px; }
 #left UL LI { padding: 10px 0 0 20px; }
 #left HR { width: 200px; border: 0 none; height: 1px; color: #000; background: #000; }
+#left .nav-login {font-size: 14px;}
 
-#center { margin: 150px 0 0 300px; padding: 0px 0 0 50px; width: 800px; border-left: 2px solid #eeeeee;}
-
-
+#center { margin: 30px 0 0 300px; padding: 0px 0 0 50px; width: 900px; border-left: 2px solid #eeeeee;}
 /* #center TABLE TD { padding: 8px 10px 8px 10px; text-align: center; font-size: 14px; border-bottom: 1px solid #000; } */
 #center .data, #center IMG { display: inline-block; vertical-align: top; }
-#center IMG { margin: 0 0 0 50px; width: 300px; height: 334px; border: 2px solid #eeeeee; }
-
-#footer { margin: 100px 0 0 0px; padding: 0px 0 0 0px; display: block; width: 800px; height: 50px; }
+#center IMG { margin: 0 0 0 0px; border: 2px solid #eeeeee; }
+#footer { clear: both; margin: 100px 0; padding: 0px 0 0 0px; display: block; width: 748px; height: 50px; }
