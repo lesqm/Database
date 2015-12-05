@@ -18,32 +18,32 @@ import ru.lesqm.db.logic.Molecule;
 import ru.lesqm.db.logic.MoleculeJson;
 
 public class EditController extends Controller {
-
+    
     private static final Gson gson = new Gson();
-
+    
     public static class JsonOk {
-
+        
         public JsonOk(String url) {
             this.url = url;
         }
-
+        
         public String status = "ok";
         public String url;
     }
-
+    
     public Response add() throws TemplateNotFoundException, TemplateRenderException {
-        return ok(view("add.html", new EditorData(forms.generateFormId("add"), null)));
+        return ok(view("add.html"));
     }
-
+    
     public Response addProcess() throws TemplateNotFoundException, TemplateRenderException {
         Session session = ctx.getSession();
-
+        
         final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
+        
         MoleculeJson inputMol = gson.fromJson(ctx.getRequest().getContent().toString(Charset.forName("UTF-8")), MoleculeJson.class);
-
+        
         Molecule m = new Molecule();
-
+        
         m.setFormula(inputMol.formula);
         m.setPicture(inputMol.picture);
         m.setBaseName(inputMol.baseName);
@@ -52,61 +52,61 @@ public class EditController extends Controller {
         m.setCodeName(inputMol.codeName);
         m.setContent(inputMol.content);
         m.setLiterature(inputMol.literature);
-        m.setCtype(1);
-        m.setUid((long) session.get("user-id"));
-
+        
         long id = db.putMolecule(m);
-
+        
         String[] keywords = inputMol.keywords.split(",");
         List<Long> kids = new ArrayList<>();
         for (String keyword : keywords) {
             kids.add(db.putKeyword(keyword.trim()));
         }
         db.putKeywordsToMoleculeById(id, kids);
-
+        
         String[] classes = inputMol.classes.split(",");
         List<Long> clids = new ArrayList<>();
         for (String mclass : classes) {
             clids.add(db.putClass(mclass.trim()));
         }
         db.putClassesToMoleculeById(id, clids);
-
-        return ok(gson.toJson(new JsonOk(urls.that("change/" + Molecule.hid.encode(id))))).asJson();
+        
+        db.putChange((long) session.get("user-id"), id, 0);
+        
+        return ok(gson.toJson(new JsonOk(urls.that("view/" + Molecule.hmid.encode(id))))).asJson();
     }
-
+    
     public Response edit(String hmid) throws TemplateNotFoundException, TemplateRenderException {
         final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
+        
         long[] mid = Molecule.hmid.decode(hmid.toLowerCase());
         Molecule m = null;
-
-        if (mid.length == 0 || (m = db.getMoleculeByMid(mid[0])) == null) {
+        
+        if (mid.length == 0 || (m = db.getMoleculeById(mid[0])) == null) {
             return notFoundDefault(ctx);
         }
-
+        
         List<Keyword> keywords = db.getMoleculeKeywords(m.getId());
         List<MClass> mClasses = db.getMoleculeClasses(m.getId());
-
+        
         m.setKeywords(keywords == null ? new ArrayList<>() : keywords);
         m.setMClasses(mClasses == null ? new ArrayList<>() : mClasses);
-
-        return ok(view("edit.html", new EditorData(forms.generateFormId("edit"), m)));
+        
+        return ok(view("edit.html", m));
     }
-
+    
     public Response editProcess(String hmid) throws TemplateNotFoundException, TemplateRenderException {
         Session session = ctx.getSession();
-
+        
         final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
+        
         long[] mid = Molecule.hmid.decode(hmid.toLowerCase());
         Molecule m = null;
-
-        if (mid.length == 0 || (m = db.getMoleculeByMid(mid[0])) == null) {
+        
+        if (mid.length == 0 || (m = db.getMoleculeById(mid[0])) == null) {
             return notFoundDefault(ctx);
         }
-
+        
         MoleculeJson inputMol = gson.fromJson(ctx.getRequest().getContent().toString(Charset.forName("UTF-8")), MoleculeJson.class);
-
+        
         m.setFormula(inputMol.formula);
         m.setPicture(inputMol.picture);
         m.setBaseName(inputMol.baseName);
@@ -115,89 +115,50 @@ public class EditController extends Controller {
         m.setCodeName(inputMol.codeName);
         m.setContent(inputMol.content);
         m.setLiterature(inputMol.literature);
-        m.setCtype(1);
-        m.setUid((long) session.get("user-id"));
-
-        long id = db.putMoleculeChange(m);
-
+        
+        db.updateMolecule(m);
+        
         String[] keywords = inputMol.keywords.split(",");
         List<Long> kids = new ArrayList<>();
         for (String keyword : keywords) {
             kids.add(db.putKeyword(keyword.trim()));
         }
-
+        
         String[] classes = inputMol.classes.split(",");
         List<Long> clids = new ArrayList<>();
         for (String mclass : classes) {
             clids.add(db.putClass(mclass.trim()));
         }
-
-        db.putKeywordsToMoleculeById(id, kids);
-        db.putClassesToMoleculeById(id, clids);
-
-        return ok(gson.toJson(new JsonOk(urls.that("view/" + Molecule.hmid.encode(m.getMid())
-                + "/" + Molecule.hid.encode(id))))).asJson();
+        
+        db.deleteKeywordBindings(m.getId());
+        db.putKeywordsToMoleculeById(m.getId(), kids);
+        
+        db.deleteClassBindings(m.getId());
+        db.putClassesToMoleculeById(m.getId(), clids);
+        
+        db.putChange((long) session.get("user-id"), m.getId(), 1);
+        
+        return ok(gson.toJson(new JsonOk(urls.that("view/" + Molecule.hmid.encode(m.getId()))))).asJson();
     }
-
+    
     public Response deleteProcess(String hmid) throws TemplateNotFoundException, TemplateRenderException {
         Session session = ctx.getSession();
-
+        
         final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
+        
         long[] mid = Molecule.hmid.decode(hmid.toLowerCase());
         Molecule m = null;
-
-        if (mid.length == 0 || (m = db.getMoleculeByMid(mid[0])) == null) {
+        
+        if (mid.length == 0 || (m = db.getMoleculeById(mid[0])) == null) {
             return notFoundDefault(ctx);
         }
-
-        m.setUid((long) session.get("user-id"));
-        db.putMoleculeDelete(m);
+        
+        db.deleteMolecule(m.getId());
+        db.deleteKeywordBindings(m.getId());
+        db.deleteClassBindings(m.getId());
+        
+        db.putChange((long) session.get("user-id"), 0, 2);
+        
         return redirect(urls.that());
-    }
-
-    public Response revertProcess(String hid) throws TemplateNotFoundException, TemplateRenderException {
-        Session session = ctx.getSession();
-
-        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
-        long[] id = Molecule.hid.decode(hid.toLowerCase());
-        Molecule m = null;
-
-        if (id.length == 0 || (m = db.getMoleculeById(id[0])) == null) {
-            return notFoundDefault(ctx);
-        }
-
-        List<Keyword> keywords = db.getMoleculeKeywords(m.getId());
-        List<Long> kids = new ArrayList<>();
-        keywords.stream().forEach((k) -> {
-            kids.add(k.getId());
-        });
-
-        List<MClass> classess = db.getMoleculeClasses(m.getId());
-        List<Long> clids = new ArrayList<>();
-        classess.stream().forEach((c) -> {
-            clids.add(c.getId());
-        });
-
-        m.setUid((long) session.get("user-id"));
-        long newid = db.putMoleculeRevert(m);
-
-        db.putKeywordsToMoleculeById(newid, kids);
-        db.putKeywordsToMoleculeById(newid, clids);
-
-        return redirect(urls.that("view/" + Molecule.hmid.encode(m.getMid())
-                + "/" + Molecule.hid.encode(newid)));
-    }
-
-    public static class EditorData {
-
-        public String fid;
-        public Molecule m;
-
-        protected EditorData(String fid, Molecule m) {
-            this.fid = fid;
-            this.m = m;
-        }
     }
 }

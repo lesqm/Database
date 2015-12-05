@@ -22,19 +22,24 @@ public class Database {
 
     public List<Molecule> searchMilecule(String query) {
         String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE formula LIKE concat('%', :query, '%') "
-                + "OR baseName LIKE concat('%', :query, '%') "
-                + "OR nomeName LIKE concat('%', :query, '%') "
+                = "SELECT * FROM molecule "
+                + "WHERE MATCH (formula, baseName, codeName, nomeName, nomeNameEng) AGAINST(:query IN BOOLEAN MODE) "
                 + "OR molecule.id IN ( "
                 + "  SELECT keywords_bindings.cid "
                 + "  FROM keywords_bindings "
                 + "  WHERE kid IN ( "
                 + "    SELECT keywords.id "
                 + "    FROM keywords "
-                + "    WHERE name LIKE concat('%', :query, '%') "
+                + "    WHERE MATCH(name) AGAINST(:query IN BOOLEAN MODE) "
+                + "  ) "
+                + ") "
+                + "OR molecule.id IN ( "
+                + "  SELECT classes_bindings.cid "
+                + "  FROM classes_bindings "
+                + "  WHERE clid IN ( "
+                + "    SELECT classes.id "
+                + "    FROM classes "
+                + "    WHERE MATCH(name) AGAINST(:query IN BOOLEAN MODE) "
                 + "  ) "
                 + ") "
                 + "ORDER BY date DESC LIMIT 50";
@@ -45,34 +50,6 @@ public class Database {
                     .executeAndFetch(Molecule.class);
         }
 
-    }
-
-    public List<Molecule> getMoleculeByIds(long[] ids) {
-        if (ids.length == 0) {
-            return new ArrayList<>();
-        }
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < ids.length; i++) {
-            if (i == 0) {
-                sb.append(ids[i]);
-            } else {
-                sb.append(", ").append(ids[i]);
-            }
-        }
-
-        String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE molecule.id IN (" + sb.toString() + ") "
-                + "ORDER BY date DESC";
-
-        try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    //.addParameter("mid", mid)
-                    .executeAndFetch(Molecule.class);
-        }
     }
 
     public List<Keyword> getMoleculeKeywords(long id) {
@@ -103,11 +80,9 @@ public class Database {
 
     public Molecule getMoleculeById(long id) {
         String sql
-                = "SELECT molecule.*, users.name AS userName "
+                = "SELECT * "
                 + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE molecule.id = :id "
-                + "ORDER BY date DESC";
+                + "WHERE id = :id";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -116,120 +91,80 @@ public class Database {
         }
     }
 
-    public Molecule getMoleculeByMidAndId(long mid, long id) {
+    public List<Log> getChangesAll() {
         String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE mid = :mid AND molecule.id = :id "
-                + "ORDER BY date DESC";
-
-        try (Connection con = sql2o.open()) {
-            Molecule m = con.createQuery(sql)
-                    .addParameter("mid", mid)
-                    .addParameter("id", id)
-                    .executeAndFetchFirst(Molecule.class);
-            return m.getCtype() == 3 ? null : m;
-        }
-    }
-
-    public Molecule getMoleculeByMid(long mid) {
-        String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE mid = :mid "
-                + "ORDER BY date DESC LIMIT 1";
-
-        try (Connection con = sql2o.open()) {
-            Molecule m = con.createQuery(sql)
-                    .addParameter("mid", mid)
-                    .executeAndFetchFirst(Molecule.class);
-            return m.getCtype() == 3 ? null : m;
-        }
-    }
-
-    public List<Molecule> getMoleculeByMidAll(long mid) {
-        String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE mid = :mid "
-                + "ORDER BY date DESC";
-
-        try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    .addParameter("mid", mid)
-                    .executeAndFetch(Molecule.class);
-        }
-    }
-
-    public List<Molecule> getMoleculeByUid(long uid) {
-        String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
-                + "WHERE uid = :uid "
-                + "ORDER BY date DESC";
-
-        try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    .addParameter("uid", uid)
-                    .executeAndFetch(Molecule.class);
-        }
-    }
-
-    public List<Molecule> getMoleculeChangesAll() {
-        String sql
-                = "SELECT molecule.*, users.name AS userName "
-                + "FROM molecule "
-                + "LEFT JOIN users ON molecule.uid = users.id "
+                = "SELECT logs.*, users.name AS userName, molecule.formula, molecule.baseName, molecule.nomeName "
+                + "FROM logs "
+                + "LEFT JOIN users ON logs.uid = users.id "
+                + "LEFT JOIN molecule ON logs.mid = molecule.id "
                 + "ORDER BY date DESC "
                 + "LIMIT 100";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
-                    .executeAndFetch(Molecule.class);
+                    .executeAndFetch(Log.class);
         }
     }
 
-    public long putMoleculeChange(Molecule m) {
+    public void putChange(long uid, long mid, int type) {
         String sql
-                = "INSERT INTO molecule(mid, uid, date, formula, picture, baseName, codeName, nomeName, nomeNameEng, ctype, content, literature) "
-                + "VALUES (:mid, :uid, now(), :formula, :picture, :baseName, :codeName, :nomeName, :nomeNameEng, 1, :content, :literature)";
+                = "INSERT INTO logs "
+                + "VALUES (NULL, :type, :uid, NULL, :mid)";
 
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql).bind(m).executeUpdate().getKey(Long.class);
+            con.createQuery(sql)
+                    .addParameter("uid", uid)
+                    .addParameter("mid", mid)
+                    .addParameter("type", type)
+                    .executeUpdate();
         }
     }
 
     public long putMolecule(Molecule m) {
         String sql
-                = "INSERT INTO molecule(mid, uid, date, formula, picture, baseName, codeName, nomeName, nomeNameEng, ctype, content, literature) "
-                + "SELECT MAX(mid) + 1, :uid, now(), :formula, :picture, :baseName, :codeName, :nomeName, :nomeNameEng, 0, :content, :literature FROM molecule";
+                = "INSERT INTO molecule "
+                + "VALUES (NULL, :formula, :picture, :baseName, :codeName, :nomeName, :nomeNameEng, :content, :literature)";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).bind(m).executeUpdate().getKey(Long.class);
         }
     }
 
-    public long putMoleculeDelete(Molecule m) {
+    public void updateMolecule(Molecule m) {
         String sql
-                = "INSERT INTO molecule(mid, uid, date, ctype) "
-                + "VALUES (:mid, :uid, now(), 3)";
+                = "UPDATE molecule SET "
+                + "formula = :formula, "
+                + "picture = :picture, "
+                + "baseName = :baseName, "
+                + "codeName = :codeName, "
+                + "nomeName = :nomeName, "
+                + "nomeNameEng = :nomeNameEng, "
+                + "content = :content, "
+                + "literature = :literature "
+                + "WHERE id = :id";
 
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql).bind(m).executeUpdate().getKey(Long.class);
+            con.createQuery(sql).bind(m).executeUpdate();
         }
     }
 
-    public long putMoleculeRevert(Molecule m) {
+    public void deleteMolecule(long id) {
         String sql
-                = "INSERT INTO molecule(mid, uid, date, formula, picture, baseName, codeName, nomeName, nomeNameEng, ctype, content, literature) "
-                + "VALUES (:mid, :uid, now(), :formula, :picture, :baseName, :codeName, :nomeName, :nomeNameEng, 2, :content, :literature)";
+                = "DELETE FROM molecule "
+                + "WHERE id = :id";
 
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql).bind(m).executeUpdate().getKey(Long.class);
+            con.createQuery(sql).addParameter("id", id).executeUpdate();
+        }
+    }
+
+    public void deleteKeywordBindings(long id) {
+        String sql
+                = "DELETE FROM keywords_bindings "
+                + "WHERE cid = :id";
+
+        try (Connection con = sql2o.open()) {
+            con.createQuery(sql).addParameter("id", id).executeUpdate();
         }
     }
 
@@ -272,6 +207,16 @@ public class Database {
         }
     }
 
+    public void deleteClassBindings(long id) {
+        String sql
+                = "DELETE FROM classes_bindings "
+                + "WHERE cid = :id";
+
+        try (Connection con = sql2o.open()) {
+            con.createQuery(sql).addParameter("id", id).executeUpdate();
+        }
+    }
+
     public void putClassesToMoleculeById(long id, List<Long> cids) {
         String sql
                 = "INSERT INTO classes_bindings(cid, clid) "
@@ -299,10 +244,9 @@ public class Database {
             con.createQuery(sql)
                     .addParameter("name", name)
                     .executeUpdate();
-
         }
-        sql
-                = "SELECT * FROM classes WHERE name = :name";
+
+        sql = "SELECT * FROM classes WHERE name = :name";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)

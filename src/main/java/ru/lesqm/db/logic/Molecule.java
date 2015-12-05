@@ -1,49 +1,26 @@
 package ru.lesqm.db.logic;
 
-import java.sql.Timestamp;
 import java.util.List;
 import org.hashids.Hashids;
 
 public class Molecule {
 
-    public static final Hashids hid = new Hashids("hgydkrjt", 8, "abcdefghijklmnopqrstuvwxyz0123456789");
     public static final Hashids hmid = new Hashids("nvheoptf", 8, "abcdefghijklmnopqrstuvwxyz0123456789");
 
     private Long id;
-    private Long mid;
-    private Long uid;
-    private String userName;
-    private Timestamp date;
-    private Integer ctype;
     private String formula;
-    private String picture;       // New
+    private String picture;
     private String baseName;
     private String nomeName;
-    private String nomeNameEng;   // New
-    private String codeName;      // New
-    private List<MClass> mclass;  // New
+    private String nomeNameEng;
+    private String codeName;
+    private List<MClass> mclass;
     private String content;
     private String literature;
     private List<Keyword> keywords;
 
     public Long getId() {
         return id;
-    }
-
-    public Long getMid() {
-        return mid;
-    }
-
-    public Long getUid() {
-        return uid;
-    }
-
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public Integer getCtype() {
-        return ctype;
     }
 
     public String getFormula() {
@@ -68,22 +45,6 @@ public class Molecule {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setMid(Long mid) {
-        this.mid = mid;
-    }
-
-    public void setUid(Long uid) {
-        this.uid = uid;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-
-    public void setCtype(Integer ctype) {
-        this.ctype = ctype;
     }
 
     public void setFormula(String formula) {
@@ -112,14 +73,6 @@ public class Molecule {
 
     public void setKeywords(List<Keyword> keywords) {
         this.keywords = keywords;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getNomeNameEng() {

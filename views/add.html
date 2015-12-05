@@ -90,7 +90,6 @@
         tinyMCE.get("inputSources").save();
         
         var formData = {};
-        var Form = this;
 
         $.each($('form#addForm').serializeArray(), function (_, kv) {
             formData[kv.name] = kv.value;
