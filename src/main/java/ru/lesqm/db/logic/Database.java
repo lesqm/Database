@@ -42,7 +42,7 @@ public class Database {
                 + "    WHERE MATCH(name) AGAINST(:query IN BOOLEAN MODE) "
                 + "  ) "
                 + ") "
-                + "ORDER BY date DESC LIMIT 50";
+                + "LIMIT 50";
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
