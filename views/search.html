@@ -23,7 +23,7 @@
     <% for(var i = 0; i < data.size(); i++ ) { %>
     
     <% var m = data.get(i); %>
-    <% var hmid = Molecule.hmid.encode(m.getMid()); %>
+    <% var hmid = Molecule.hmid.encode(m.getId()); %>
     <tr>
         <td><# hmid #></td>
         <td><# m.getFormula() #></td>
