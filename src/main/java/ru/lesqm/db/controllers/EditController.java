@@ -9,27 +9,18 @@ import com.google.gson.Gson;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import ru.lesqm.db.LesqmDatabaseApp;
 import ru.lesqm.db.logic.Database;
 import ru.lesqm.db.logic.Keyword;
 import ru.lesqm.db.logic.MClass;
 import ru.lesqm.db.logic.Molecule;
 import ru.lesqm.db.logic.MoleculeJson;
+import ru.lesqm.db.logic.User;
+import ru.lesqm.db.utils.JsonOkUrl;
 
 public class EditController extends Controller {
     
     private static final Gson gson = new Gson();
-    
-    public static class JsonOk {
-        
-        public JsonOk(String url) {
-            this.url = url;
-        }
-        
-        public String status = "ok";
-        public String url;
-    }
     
     public Response add() throws TemplateNotFoundException, TemplateRenderException {
         return ok(view("add.html"));
@@ -45,7 +36,7 @@ public class EditController extends Controller {
         Molecule m = new Molecule();
         
         m.setFormula(inputMol.formula);
-        m.setPicture(inputMol.picture);
+        m.setPicture("");
         m.setBaseName(inputMol.baseName);
         m.setNomeName(inputMol.nomeName);
         m.setNomeNameEng(inputMol.nomeNameEng);
@@ -69,9 +60,9 @@ public class EditController extends Controller {
         }
         db.putClassesToMoleculeById(id, clids);
         
-        db.putChange((long) session.get("user-id"), id, 0);
+        db.putChange(((User) session.get("user")).getId(), id, 0);
         
-        return ok(gson.toJson(new JsonOk(urls.that("view/" + Molecule.hmid.encode(id))))).asJson();
+        return ok(gson.toJson(new JsonOkUrl(urls.that("view/" + Molecule.hmid.encode(id))))).asJson();
     }
     
     public Response edit(String hmid) throws TemplateNotFoundException, TemplateRenderException {
@@ -108,7 +99,7 @@ public class EditController extends Controller {
         MoleculeJson inputMol = gson.fromJson(ctx.getRequest().getContent().toString(Charset.forName("UTF-8")), MoleculeJson.class);
         
         m.setFormula(inputMol.formula);
-        m.setPicture(inputMol.picture);
+        m.setPicture("");
         m.setBaseName(inputMol.baseName);
         m.setNomeName(inputMol.nomeName);
         m.setNomeNameEng(inputMol.nomeNameEng);
@@ -136,9 +127,9 @@ public class EditController extends Controller {
         db.deleteClassBindings(m.getId());
         db.putClassesToMoleculeById(m.getId(), clids);
         
-        db.putChange((long) session.get("user-id"), m.getId(), 1);
+        db.putChange(((User) session.get("user")).getId(), m.getId(), 1);
         
-        return ok(gson.toJson(new JsonOk(urls.that("view/" + Molecule.hmid.encode(m.getId()))))).asJson();
+        return ok(gson.toJson(new JsonOkUrl(urls.that("view/" + Molecule.hmid.encode(m.getId()))))).asJson();
     }
     
     public Response deleteProcess(String hmid) throws TemplateNotFoundException, TemplateRenderException {
@@ -157,7 +148,7 @@ public class EditController extends Controller {
         db.deleteKeywordBindings(m.getId());
         db.deleteClassBindings(m.getId());
         
-        db.putChange((long) session.get("user-id"), 0, 2);
+        db.putChange(((User) session.get("user")).getId(), 0, 2);
         
         return redirect(urls.that());
     }

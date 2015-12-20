@@ -1,0 +1,36 @@
+@extends base.html
+
+<% block content %>
+<% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
+<% var session = ctx.getSession(); %>
+<h2>Поиск</h2>
+<form id="search" method="get" action="<#api.that('search')#>">
+	<div class="input-group">
+		<input type="text" class="form-control" name="q" value="<# api.escape(ctx.getRequest().getQuery().get('q').get(0)) #>">
+		<span class="input-group-btn">
+			<input type="submit" class="btn btn-default" value="Найти" />
+		</span>
+	</div>
+</form>
+<table class="table">
+    <tr>
+        <td>Ид.</td>
+        <td>Брутто-формула</td>
+        <td>Общепринятое название</td>
+        <td>Название по меж. ном.</td>
+        <td></td>
+    </tr>
+    <% for(var i = 0; i < data.size(); i++ ) { %>
+    
+    <% var m = data.get(i); %>
+    <% var hmid = Molecule.hmid.encode(m.getId()); %>
+    <tr>
+        <td><# hmid #></td>
+        <td><# m.getFormula() #></td>
+        <td><# m.getBaseName() #></td>
+        <td><# m.getNomeName() #></td>
+        <td><a href="@{api.that('view/' + hmid )}">Открыть</a></td>
+    </tr>
+    <% } %>
+</table>	
+<% endblock %>

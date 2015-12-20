@@ -1,0 +1,61 @@
+@extends base.html
+
+<% block content %>
+<% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
+<% var session = ctx.getSession(); %>
+<% var hmid = Molecule.hmid.encode(data.getId()); %>
+<h2>Общее</h2>
+<table class="table">
+    <tr>
+        <td>Ид.</td>
+        <td><# hmid #></td>
+    </tr>
+    <tr>
+        <td>Брутто-формула</td>
+        <td><# data.getFormula() #></td>
+    </tr>
+    <tr>
+        <td>Кодовое обозначение</td>
+        <td><# data.getCodeName() #></td>
+    </tr>
+    <tr>
+        <td>Рисунок соединения</td>
+        <td><img src="@{data.getPicture()}"/></td>
+    </tr>
+    <tr>
+        <td>Общепринятое название</td>
+        <td><# data.getBaseName() #></td>
+    </tr>
+    <tr>
+        <td>Название по номенклатуре</td>
+        <td><# data.getNomeName() #></td>
+    </tr>
+    <tr>
+        <td>Название по номенклатуре (англ.)</td>
+        <td><# data.getNomeNameEng() #></td>
+    </tr>
+    <tr>
+        <td>Ключевые слова</td>
+        <td><% for(var i = 0; i < data.getKeywords().size(); i++) { %><span class="badge"><# data.getKeywords().get(i).getName() #></span><% } %></td>
+    </tr>
+    <tr>
+        <td>Класс</td>
+        <td><% for(var i = 0; i < data.getMClasses().size(); i++) { %><span class="badge"><# data.getMClasses().get(i).getName() #></span><% } %></td>
+    </tr>
+</table>	
+<h2>Содержимое</h2>
+<div><# data.getContent() #></div>
+<h2>Литература</h2>
+<div><# data.getLiterature() #></div>
+<h2></h2>
+<div class="btn-group">
+    <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Действия<span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu">
+        <% if(session.test('user-logined', true)) { %>
+            <li><a href="@{api.that('edit/' + hmid)}">Редактировать</a></li>
+            <li class="divider"></li>
+            <li><a href="@{api.that('delete/' + hmid)}">Удалить</a></li>
+        <% } %>
+    </ul>
+</div>
+<% endblock %>

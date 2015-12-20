@@ -1,0 +1,17 @@
+@extends base.html
+
+<% block content %>
+<h2>Авторизация</h2>
+<form role="form" method="post">
+    <input type="hidden" name="fid" value="<# data.fid #>">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Электронная почта</label>
+        <input type="email" name="email" class="form-control" id="exampleInputEmail1">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Пароль</label>
+        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+    </div>
+    <button type="submit" class="btn btn-default">Войти</button>
+</form>
+<% endblock %>

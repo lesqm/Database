@@ -1,0 +1,136 @@
+@extends base/base.html
+
+<% block header %>
+<body data-layout="fixed">
+    <div id="navigation">
+        <div class="container-fluid">
+            <a href="main.html" id="brand">DB.LESQM</a>
+            <a href="#" class="toggle-nav" rel="tooltip" data-placement="bottom" title="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul class='main-nav'>
+                <li class='active'><a><span>Панель</span></a></li>
+                <!-- <li>
+                    <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                        <span>Меню демо</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="form-results.html">Демо результатов поиска</a>
+                        </li>
+                        <li>
+                            <a href="forms-add.html">Демо добавления</a>
+                        </li>
+                        <li>
+                            <a href="forms-view.html">Демо просмотра</a>
+                        </li>
+                        <li>
+                            <a href="forms-login.html">Демо входа</a>
+                        </li>
+                    </ul>
+                </li> -->
+            </ul>
+            <div class="user">
+                <ul class="icon-nav">
+                    <li class='dropdown language-select'>
+                        <a href="#" class='dropdown-toggle' data-toggle="dropdown">
+                            <img src="@{api.asset('img/demo/flags/ru.png')}" alt="">
+                            <span>RU</span>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="#"><img src="@{api.asset('img/demo/flags/us.gif')}" alt=""><span>English</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <a href="#" class='dropdown-toggle' data-toggle="dropdown">Антон Ш.<img src="@{api.asset('img/demo/user-avatar.jpg')}" alt=""></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="#">Профиль</a></li>
+                        <li><a href="#">Настройки</a></li>
+                        <li><a href="@{api.that('signout')}">Выйти</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" id="content">
+        <div id="left">
+            <form method="get" action="@{api.that('search')}" class='search-form'>
+                <div class="search-pane">
+                    <input type="text" name="q" placeholder="Поиск молекул">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+            <div class="subnav">
+                <div class="subnav-title">
+                    <a href="#" class='toggle-subnav'><i class="fa fa-angle-down"></i><span>Навигация</span></a>
+                </div>
+                <ul class="subnav-menu">
+                    <li class='dropdown'>
+                        <a href="#" data-toggle="dropdown">Инструкции</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Добавление</a></li>
+                            <li><a href="#">Поиск</a></li>
+                            <li><a href="#">Изменения</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="@{api.that('add')}">Добавить соединение</a></li>
+                    <li><a href="@{api.that('changes')}">Обновления</a></li>
+                    <li><a href="@{api.that('contacts')}">Контакты</a></li>
+                    <li><a href="@{api.that('about')}">О системе</a></li>
+                </ul>
+            </div>
+            <div class="subnav">
+                <div class="subnav-title">
+                    <a href="#" class='toggle-subnav'>
+                        <i class="fa fa-angle-down"></i>
+                        <span>Пользователи</span>
+                    </a>
+                </div>
+                <%
+                var users = ctx.getApp().getDatabase().getUserAll();
+                                
+                %>
+                <div class="subnav-content">
+                    <ul class="userlist">
+                        <% for(var i = 0; i < users.size(); i++ ) { %>
+
+                        <% var u = users.get(i); %>
+                        <li>
+                            <a href="#"><img src="@{api.asset('img/demo/user-2.jpg')}" alt=""></a>
+                            <div class="user">
+                                <span class="name" style="white-space: nowrap; text-overflow: clip; width: 20px; display: block;"><# u.getName() #></span>
+                                <span class="position">Редактор</span>
+                            </div>
+                            <div class="status active"><i class="fa fa-circle"></i></div>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="main">
+            <div class="container-fluid">
+                
+                <!--
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="@{api.that()}">Главная</a><i class="fa fa-angle-right"></i></li>
+                        <li><a href="@{api.that('changes')}">Изменения</a></li>
+                    </ul>
+                </div>
+                -->
+                <% endblock %>
+                <% block footer %>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p>DB.LESQM<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="#">Контакты</a></p>
+        <a href="#" class="gototop">
+            <i class="fa fa-arrow-up"></i>
+        </a>
+    </div>
+</body>
+<% endblock %>

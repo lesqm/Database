@@ -5,81 +5,68 @@ import com.bunjlabs.fugaframework.foundation.Response;
 import com.bunjlabs.fugaframework.sessions.Session;
 import com.bunjlabs.fugaframework.templates.TemplateNotFoundException;
 import com.bunjlabs.fugaframework.templates.TemplateRenderException;
-import java.util.List;
-import java.util.Map;
+import com.google.gson.Gson;
+import java.nio.charset.Charset;
 import ru.lesqm.db.LesqmDatabaseApp;
 import ru.lesqm.db.Utils;
 import ru.lesqm.db.logic.Database;
 import ru.lesqm.db.logic.User;
+import ru.lesqm.db.utils.JsonError;
+import ru.lesqm.db.utils.JsonOkUrl;
 
 public class AuthController extends Controller {
+
+    private static final Gson gson = new Gson();
 
     public Response login() throws TemplateNotFoundException, TemplateRenderException {
         Session session = ctx.getSession();
 
-        if (session.get("user-logined") != null && session.getBoolean("user-logined") == true) {
-            return redirect(urls.that());
+        if (session.get("user") == null) {
+            return ok(view("login.html"));
         }
-        return ok(view("login.html", new AuthData(forms.generateFormId("auth"))));
+
+        return redirect(urls.that());
     }
 
     public Response loginProcess() throws TemplateNotFoundException, TemplateRenderException {
-        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
-        Map<String, List<String>> post = ctx.getRequest().getParameters();
         Session session = ctx.getSession();
 
         if (session.get("user-logined") != null && session.getBoolean("user-logined") == true) {
             return temporaryRedirect(urls.that());
         }
-        if (post.get("email") == null
-                || post.get("password") == null
-                || post.get("fid") == null) {
-            return ok("Bad post parameters " + post.size());
-        }
 
-        for (Map.Entry<String, List<String>> e : post.entrySet()) {
-            if (e.getValue().isEmpty()) {
-                return ok("Bad post parameter: " + e.getKey());
-            }
-        }
+        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
 
-        if (!forms.testFormId("auth", post.get("fid").get(0))) {
-            return ok("Bad form id");
-        }
+        AuthData adata = gson.fromJson(ctx.getRequest().getContent().toString(Charset.forName("UTF-8")), AuthData.class);
 
-        User u = db.getUserByEmail(post.get("email").get(0));
-        if (u == null || !u.getPassword().equals(Utils.toSHA1(post.get("password").get(0)))) {
-            return ok(view("login.html", new AuthData(forms.generateFormId("auth"),
-                    "Электронная почта пользователя и пароль не совпадают или учетная запись отсутствует.")));
+        User u = db.getUserByEmail(adata.email);
+
+        if (u == null || !u.getPassword().equals(Utils.toSHA1(adata.password))) {
+            return ok(gson.toJson(new JsonError("Неверный логин или пароль"))).asJson();
         }
 
         session.put("user-logined", true);
-        session.put("user-id", u.getId());
-        session.put("user-name", u.getName());
+        session.put("user", u);
 
-        List<String> get = ctx.getRequest().getQuery().get("r");
-        if (get == null || get.isEmpty()) {
-            return redirect(urls.that());
-        } else {
-            return redirect(urls.that(get.get(0)));
-        }
+        return ok(gson.toJson(new JsonOkUrl(urls.that()))).asJson();
     }
 
     public Response logoutProcess() throws TemplateNotFoundException, TemplateRenderException {
         Session session = ctx.getSession();
 
         session.remove("user-logined");
-        session.remove("user-id");
-        session.remove("user-name");
+        session.remove("user");
 
         return redirect(urls.that());
     }
 
     public Response check() {
         Session session = ctx.getSession();
-        if (session.get("user-logined") == null || session.getBoolean("user-logined") == false) {
-            return temporaryRedirect(urls.that("restricted"));
+
+        String uri = ctx.getRequest().getUri();
+        uri = uri.length() > 1 ? "?r=" + urls.that(uri.substring(1)) : "";
+        if (session.get("user") == null) {
+            return temporaryRedirect(urls.that("signin" + uri));
         }
 
         return proceed();
@@ -87,16 +74,7 @@ public class AuthController extends Controller {
 
     public static class AuthData {
 
-        public String fid;
-        public String error = "";
-
-        public AuthData(String fid) {
-            this.fid = fid;
-        }
-
-        public AuthData(String fid, String error) {
-            this.fid = fid;
-            this.error = error;
-        }
+        public String email;
+        public String password;
     }
 }

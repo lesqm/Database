@@ -1,61 +1,111 @@
-@extends base.html
+@extends base/base_main.html
 
 <% block content %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
-<% var session = ctx.getSession(); %>
 <% var hmid = Molecule.hmid.encode(data.getId()); %>
-<h2>Общее</h2>
-<table class="table">
-    <tr>
-        <td>Ид.</td>
-        <td><# hmid #></td>
-    </tr>
-    <tr>
-        <td>Брутто-формула</td>
-        <td><# data.getFormula() #></td>
-    </tr>
-    <tr>
-        <td>Кодовое обозначение</td>
-        <td><# data.getCodeName() #></td>
-    </tr>
-    <tr>
-        <td>Рисунок соединения</td>
-        <td><img src="@{data.getPicture()}"/></td>
-    </tr>
-    <tr>
-        <td>Общепринятое название</td>
-        <td><# data.getBaseName() #></td>
-    </tr>
-    <tr>
-        <td>Название по номенклатуре</td>
-        <td><# data.getNomeName() #></td>
-    </tr>
-    <tr>
-        <td>Название по номенклатуре (англ.)</td>
-        <td><# data.getNomeNameEng() #></td>
-    </tr>
-    <tr>
-        <td>Ключевые слова</td>
-        <td><% for(var i = 0; i < data.getKeywords().size(); i++) { %><span class="badge"><# data.getKeywords().get(i).getName() #></span><% } %></td>
-    </tr>
-    <tr>
-        <td>Класс</td>
-        <td><% for(var i = 0; i < data.getMClasses().size(); i++) { %><span class="badge"><# data.getMClasses().get(i).getName() #></span><% } %></td>
-    </tr>
-</table>	
-<h2>Содержимое</h2>
-<div><# data.getContent() #></div>
-<h2>Литература</h2>
-<div><# data.getLiterature() #></div>
-<h2></h2>
-<div class="btn-group">
-    <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Действия<span class="caret"></span></button>
-    <ul class="dropdown-menu" role="menu">
-        <% if(session.test('user-logined', true)) { %>
-            <li><a href="@{api.that('edit/' + hmid)}">Редактировать</a></li>
-            <li class="divider"></li>
-            <li><a href="@{api.that('delete/' + hmid)}">Удалить</a></li>
-        <% } %>
-    </ul>
+<div class="page-header">
+    <div class="pull-left">
+        <h1>Просмотр</h1>
+    </div>
+    <div class="pull-right">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-content">
+                <table id="user" class="table table-bordered table-striped table-force-topborder" style="clear: both">
+                    <tbody>
+                        <tr>
+                            <td width="30%">Ид.</td>
+                            <td width="70%" class='hidden-480'>
+                                <span class="muted"><# hmid #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Брутто-формула</td>
+                            <td>
+                                <span class="muted"><# data.getFormula() #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Кодовое обозначение</td>
+                            <td>
+                                <span class="muted"><# data.getCodeName() #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Рисунок соединения</td>
+                            <td>
+                                <span class="muted"><img src="@{data.getPicture()}"/></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Общепринятое название</td>
+                            <td>
+                                <span class="muted"><# data.getBaseName() #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Название по номенклатуре</td>
+                            <td>
+                                <span class="muted"><# data.getNomeName() #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Название по номенклатуре (англ.)</td>
+                            <td>
+                                <span class="muted"><# data.getNomeNameEng() #></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ключевые слова</td>
+                            <td>
+                                <% for(var i = 0; i < data.getKeywords().size(); i++) { %><span class="badge"><# data.getKeywords().get(i).getName() #></span><% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Класс</td>
+                            <td>
+                                <% for(var i = 0; i < data.getMClasses().size(); i++) { %><span class="badge"><# data.getMClasses().get(i).getName() #></span><% } %>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-title">
+                <h4>Содержимое</h4>
+            </div>
+            <div class="box-content"><# data.getContent() #></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-title">
+                <h3>
+                    Литература
+                </h3>
+            </div>
+            <div class="box-content"><# data.getLiterature() #></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-content">
+                <a href="@{api.that('edit/' + hmid)}" class="btn btn-primary">Редактировать</a>
+                <a href="@{api.that('delete/' + hmid)}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
 </div>
 <% endblock %>

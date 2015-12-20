@@ -19,7 +19,7 @@ public class ViewController extends Controller {
             return notFoundDefault(ctx);
         }
 
-        return ok(view("viewChanges.html", logList));
+        return ok(view("changes.html", logList));
     }
 
     public Response viewByHmid(String hmid) throws TemplateNotFoundException, TemplateRenderException {

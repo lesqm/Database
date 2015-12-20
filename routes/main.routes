@@ -1,42 +1,36 @@
 use ru.lesqm.db.controllers
 
-
-// Static
+// Static assets
 GET $/assets/(.*) asset(1)
 
-GET  $/                  view("index.html")
-GET  $/contacts/?        view("contacts.html")
-GET  $/about/?           view("about.html")
-GET  $/restricted        view("restricted.html")
-GET  $/404/?             view("404.html")
-
-
 // Authentication
-$/login/? {
+$/signin/? {
     GET  AuthController.login()
     POST AuthController.loginProcess()
 }
-GET  $/logout/?                               AuthController.logoutProcess()
+AuthController.check()
+
+GET  $/signout/?               AuthController.logoutProcess()
+
+
+GET  $/contacts/?              view("static/contacts.html")
+GET  $/about/?                 view("static/about.html")
 
 
 // Views
-GET  $/changes/?                              ViewController.viewChangesAll()
-GET  $/view/([a-zA-Z0-9]+)                    ViewController.viewByHmid(1:String)
+GET  $/                        ViewController.viewChangesAll()
+GET  $/changes/?               ViewController.viewChangesAll()
 
+GET  $/view/([a-zA-Z0-9]+)     ViewController.viewByHmid(1:String)
 
 // Search
-GET  $/search/?                               SearchController.search()
+GET  $/search/?                SearchController.search()
 
+// Data edit
+GET  $/add/?                   EditController.add()
+POST $/add/?                   EditController.addProcess()
 
-// Restricted edit
-$/(add|edit|delete)(.*) {
-    AuthController.check()
+GET  $/edit/([a-zA-Z0-9]+)     EditController.edit(1:String)
+POST $/edit/([a-zA-Z0-9]+)     EditController.editProcess(1:String)
 
-    GET  $/add/?                              EditController.add()
-    POST $/add/?                              EditController.addProcess()
-
-    GET  $/edit/([a-zA-Z0-9]+)                EditController.edit(1:String)
-    POST $/edit/([a-zA-Z0-9]+)                EditController.editProcess(1:String)
-
-    GET  $/delete/([a-zA-Z0-9]+)              EditController.deleteProcess(1:String)
-}
+GET  $/delete/([a-zA-Z0-9]+)   EditController.deleteProcess(1:String)

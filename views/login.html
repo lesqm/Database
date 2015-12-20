@@ -1,17 +1,32 @@
-@extends base.html
+@extends base/base.html
 
 <% block content %>
-<h2>Авторизация</h2>
-<form role="form" method="post">
-    <input type="hidden" name="fid" value="<# data.fid #>">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Электронная почта</label>
-        <input type="email" name="email" class="form-control" id="exampleInputEmail1">
+<body class="login">
+    <div class="wrapper">
+        <h1><a><img src="@{api.asset('img/logo-big.png')}" alt="" class="retina-ready" width="59" height="49">DB.LESQM</a></h1>
+        <div class="login-body">
+            <h2>Вход</h2>
+            <form class="form-validate" id="ajax-form">
+                <div class="form-group">
+                    <div class="email controls">
+                        <input type="text" name='email' placeholder="Email" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="pw controls">
+                        <input type="password" name="password" placeholder="Пароль" class="form-control">
+                    </div>
+                </div>
+                <div class="submit">
+                    <div class="remember">
+                        <input type="checkbox" name="remember" class="icheck-me" data-skin="square" data-color="blue" id="remember">
+                        <label for="remember">Запомнить меня</label>
+                    </div>
+                    <input type="submit" value="Войти" class="btn btn-primary">
+                </div>
+            </form>
+            <div class="forget"><a href="#"><span>Забыли пароль?</span></a></div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Пароль</label>
-        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-    </div>
-    <button type="submit" class="btn btn-default">Войти</button>
-</form>
+</body>
 <% endblock %>
