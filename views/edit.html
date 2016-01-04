@@ -1,5 +1,5 @@
 @extends base/base_main.html
-
+<% block title %>- Редактировать соединение<% endblock %>
 <% block content %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
 <% var hmid = Molecule.hmid.encode(data.getId()); %>

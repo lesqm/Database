@@ -4622,7 +4622,7 @@ label, input, button, select, textarea {
   color: #2a2a2a;
   line-height: 24px;
   font-weight: 400;
-  margin: 20px 0;
+  margin: 20px 0 0 0;
 }
 #main .page-header .pull-left h6 {
   color: #777;
@@ -4805,7 +4805,7 @@ label, input, button, select, textarea {
   clear: both;
 }
 #left .subnav .subnav-title span {
-  margin-left: 20px;
+  margin-left: 10px;
   font-size: 18px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -4829,7 +4829,7 @@ label, input, button, select, textarea {
 #left .subnav .subnav-title .toggle-subnav > i {
   position: absolute;
   font-size: 14px;
-  left: 10px;
+  left: 5px;
   top: 4px;
   display: none;
 }
@@ -4883,7 +4883,7 @@ label, input, button, select, textarea {
 #left .subnav .subnav-menu > li > a {
   color: #555;
   display: block;
-  padding: 5px 0 5px 27px;
+  padding: 5px 0 5px 17px;
   text-decoration: none;
   white-space: nowrap;
   text-overflow: ellipsis;

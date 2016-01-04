@@ -4,32 +4,12 @@
 <body data-layout="fixed">
     <div id="navigation">
         <div class="container-fluid">
-            <a href="main.html" id="brand">DB.LESQM</a>
-            <a href="#" class="toggle-nav" rel="tooltip" data-placement="bottom" title="Toggle navigation">
+            <a href="/" id="brand">DB.LESQM</a>
+            <a href="#" class="toggle-nav" rel="tooltip" data-placement="bottom" title="Навигация (вкл./выкл.)">
                 <i class="fa fa-bars"></i>
             </a>
             <ul class='main-nav'>
                 <li class='active'><a><span>Панель</span></a></li>
-                <!-- <li>
-                    <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-                        <span>Меню демо</span>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="form-results.html">Демо результатов поиска</a>
-                        </li>
-                        <li>
-                            <a href="forms-add.html">Демо добавления</a>
-                        </li>
-                        <li>
-                            <a href="forms-view.html">Демо просмотра</a>
-                        </li>
-                        <li>
-                            <a href="forms-login.html">Демо входа</a>
-                        </li>
-                    </ul>
-                </li> -->
             </ul>
             <div class="user">
                 <ul class="icon-nav">
@@ -39,15 +19,15 @@
                             <span>RU</span>
                         </a>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="#"><img src="@{api.asset('img/demo/flags/us.gif')}" alt=""><span>English</span></a></li>
+                            <li><a href="#"><img src="@{api.asset('img/demo/flags/us.gif')}" alt=""><span>English (недоступно)</span></a></li>
                         </ul>
                     </li>
                 </ul>
                 <div class="dropdown">
-                    <a href="#" class='dropdown-toggle' data-toggle="dropdown">Антон Ш.<img src="@{api.asset('img/demo/user-avatar.jpg')}" alt=""></a>
+                    <a href="#" class='dropdown-toggle' data-toggle="dropdown"><# ctx.getSession().get('user').getName() #><img src="@{api.asset('img/user-enable.png')}" alt=""></a>
                     <ul class="dropdown-menu pull-right">
-                        <li><a href="#">Профиль</a></li>
-                        <li><a href="#">Настройки</a></li>
+                        <li><a href="#">Профиль (недоступно)</a></li>
+                        <li><a href="#">Настройки (недоступно)</a></li>
                         <li><a href="@{api.that('signout')}">Выйти</a></li>
                     </ul>
                 </div>
@@ -55,7 +35,7 @@
         </div>
     </div>
     <div class="container-fluid" id="content">
-        <div id="left">
+        <div id="left" class="no-resize">
             <form method="get" action="@{api.that('search')}" class='search-form'>
                 <div class="search-pane">
                     <input type="text" name="q" placeholder="Поиск молекул">
@@ -67,18 +47,18 @@
                     <a href="#" class='toggle-subnav'><i class="fa fa-angle-down"></i><span>Навигация</span></a>
                 </div>
                 <ul class="subnav-menu">
-                    <li class='dropdown'>
+                    <li><a href="@{api.that('add')}"><i class="fa fa-plus"></i> | Добавить соединение</a></li>
+                    <!-- <li class='dropdown'>
                         <a href="#" data-toggle="dropdown">Инструкции</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Добавление</a></li>
                             <li><a href="#">Поиск</a></li>
                             <li><a href="#">Изменения</a></li>
                         </ul>
-                    </li>
-                    <li><a href="@{api.that('add')}">Добавить соединение</a></li>
-                    <li><a href="@{api.that('changes')}">Обновления</a></li>
-                    <li><a href="@{api.that('contacts')}">Контакты</a></li>
-                    <li><a href="@{api.that('about')}">О системе</a></li>
+                    </li> -->
+                    <li><a href="@{api.that('changes')}"><i class="fa fa-refresh"></i> | Обновления</a></li>
+                    <li><a href="@{api.that('contacts')}"><i class="fa fa-envelope-o"></i> | Контакты</a></li>
+                    <li><a href="@{api.that('about')}"><i class="fa fa-gears"></i> | О системе</a></li>
                 </ul>
             </div>
             <div class="subnav">
@@ -98,12 +78,12 @@
 
                         <% var u = users.get(i); %>
                         <li>
-                            <a href="#"><img src="@{api.asset('img/demo/user-2.jpg')}" alt=""></a>
+                            <a href="#"><img src="@{api.asset('img/user-alt.png')}" alt=""></a>
                             <div class="user">
                                 <span class="name" style="white-space: nowrap; text-overflow: clip; width: 20px; display: block;"><# u.getName() #></span>
                                 <span class="position">Редактор</span>
                             </div>
-                            <div class="status active"><i class="fa fa-circle"></i></div>
+                            <!-- <div class="status active"><i class="fa fa-circle"></i></div> -->
                         </li>
                         <% } %>
                     </ul>
@@ -127,7 +107,7 @@
         </div>
     </div>
     <div id="footer">
-        <p>DB.LESQM<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="#">Контакты</a></p>
+        <p>DB.LESQM<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="#">Контакты</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="http://lesqm.ru">Лаборатория ЭСиКХМ</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>2015-2016</p>
         <a href="#" class="gototop">
             <i class="fa fa-arrow-up"></i>
         </a>

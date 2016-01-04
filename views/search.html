@@ -1,5 +1,5 @@
 @extends base/base_main.html
-
+<% block title %>- Поиск<% endblock %>
 <% block content %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
 
@@ -16,7 +16,7 @@
                             <th>Ид.</th>
                             <th>Брутто-формула</th>
                             <th>Общепринятое название</th>
-                            <th>Название по меж. номю.</th>
+                            <th>Название по меж. ном.</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -27,7 +27,7 @@
                         <% var hmid = Molecule.hmid.encode(m.getId()); %>
                         <tr>
                             <td><# hmid #></td>
-                            <td><# m.getFormula() #><</td>
+                            <td><# m.getFormula() #></td>
                             <td class='hidden-350'><# m.getBaseName() #></td>
                             <td class='hidden-1024'><# m.getNomeName() #></td>
                             <td class='hidden-480'>
@@ -42,13 +42,9 @@
                 <div class="table-pagination">
                     <a href="#" class='disabled'>First</a>
                     <a href="#" class='disabled'>Previous</a>
-                    <span>
-                        <a href="#" class='active'>1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                    </span>
-                    <a href="#">Next</a>
-                    <a href="#">Last</a>
+                    <a href="#" class='disabled'>1</a>
+                    <a href="#" class='disabled'>Next</a>
+                    <a href="#" class='disabled'>Last</a>
                 </div>
             </div>
         </div>

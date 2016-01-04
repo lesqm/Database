@@ -1,10 +1,10 @@
 @extends base/base_main.html
-
+<% block title %>- Обновления<% endblock %>
 <% block content %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
 <div class="page-header">
     <div class="pull-left">
-        <h1>Изменения</h1>
+        <h1>Обновления</h1>
     </div>
     <div class="pull-right">
     </div>
@@ -14,8 +14,7 @@
         <div class="box">
             <div class="box-title">
                 <h3>
-                    <i class="fa fa-check"></i>
-                    Список последних изменений
+                    <i class="fa fa-check"></i> Список последних изменений
                 </h3>
             </div>
             <div class="box-content nopadding">
@@ -23,12 +22,12 @@
                     <thead>
                         <tr>
                             <th>Дата / Время</th>
-                            <th>Ид.</th>
-                            <th>Автор</th>
-                            <th>Тип</th>
+                            <!-- <th>Ид.</th> -->
                             <th>Формула</th>
                             <th>Об. название</th>
                             <th>Меж. ном.</th>
+                            <th>Автор</th>
+                            <th>Тип</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -46,12 +45,12 @@
                         <% var hmid = Molecule.hmid.encode(m.getMid()); %>
                         <tr>
                             <td><# m.getDate() #></td>
-                            <td><# hmid #></td>
-                            <td><# m.getUserName() #></td>
-                            <td><# ctype #></td>
+                            <!-- <td><# hmid #></td> -->
                             <td><% if(m.getType() != 3 && m.getFormula() != null ) { %><# m.getFormula() #><% } %></td>
                             <td><% if(m.getType() != 3 && m.getBaseName() != null ) { %><# m.getBaseName() #><% } %></td>
                             <td><% if(m.getType() != 3 && m.getNomeName() != null ) { %><# m.getNomeName() #><% } %></td>
+                            <td><# m.getUserName() #></td>
+                            <td><# ctype #></td>
                             <td>
                                 <a href="@{api.that('view/' + hmid)}" title="Открыть"><i class="fa fa-folder-open-o"></i></a>&nbsp;&nbsp;&nbsp;
                                 <a href="@{api.that('edit/' + hmid)}" title="Редактировать"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
