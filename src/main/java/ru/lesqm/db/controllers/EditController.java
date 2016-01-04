@@ -36,7 +36,7 @@ public class EditController extends Controller {
         Molecule m = new Molecule();
         
         m.setFormula(inputMol.formula);
-        m.setPicture("");
+        m.setPicture(inputMol.pictureUrl);
         m.setBaseName(inputMol.baseName);
         m.setNomeName(inputMol.nomeName);
         m.setNomeNameEng(inputMol.nomeNameEng);
@@ -99,7 +99,7 @@ public class EditController extends Controller {
         MoleculeJson inputMol = gson.fromJson(ctx.getRequest().getContent().toString(Charset.forName("UTF-8")), MoleculeJson.class);
         
         m.setFormula(inputMol.formula);
-        m.setPicture("");
+        m.setPicture(inputMol.pictureUrl);
         m.setBaseName(inputMol.baseName);
         m.setNomeName(inputMol.nomeName);
         m.setNomeNameEng(inputMol.nomeNameEng);

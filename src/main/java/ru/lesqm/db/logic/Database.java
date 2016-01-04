@@ -2,6 +2,7 @@ package ru.lesqm.db.logic;
 
 import com.bunjlabs.fugaframework.FugaApp;
 import com.bunjlabs.fugaframework.configuration.Configuration;
+import java.util.ArrayList;
 import java.util.List;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -47,6 +48,8 @@ public class Database {
             return con.createQuery(sql)
                     .addParameter("query", query)
                     .executeAndFetch(Molecule.class);
+        } catch (Exception e) {
+            return new ArrayList<>();
         }
 
     }
@@ -96,6 +99,22 @@ public class Database {
                 + "FROM logs "
                 + "LEFT JOIN users ON logs.uid = users.id "
                 + "LEFT JOIN molecule ON logs.mid = molecule.id "
+                + "ORDER BY date DESC "
+                + "LIMIT 10";
+
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(Log.class);
+        }
+    }
+    
+    public List<Log> getChangesAdd() {
+        String sql
+                = "SELECT logs.*, users.name AS userName, molecule.formula, molecule.baseName, molecule.nomeName "
+                + "FROM logs "
+                + "LEFT JOIN users ON logs.uid = users.id "
+                + "LEFT JOIN molecule ON logs.mid = molecule.id "
+                + "WHERE type = 0 "
                 + "ORDER BY date DESC "
                 + "LIMIT 10";
 

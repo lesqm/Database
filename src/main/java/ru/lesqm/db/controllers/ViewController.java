@@ -10,6 +10,10 @@ import ru.lesqm.db.logic.*;
 
 public class ViewController extends Controller {
 
+    public Response index() {
+        return seeOther(urls.that("changes/add"));
+    }
+    
     public Response viewChangesAll() throws TemplateNotFoundException, TemplateRenderException {
         final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
 
@@ -20,6 +24,18 @@ public class ViewController extends Controller {
         }
 
         return ok(view("changes.html", logList));
+    }
+    
+    public Response viewChangesAdd() throws TemplateNotFoundException, TemplateRenderException {
+        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
+
+        List<Log> logList;
+
+        if ((logList = db.getChangesAdd()) == null) {
+            return notFoundDefault(ctx);
+        }
+
+        return ok(view("adding.html", logList));
     }
 
     public Response viewByHmid(String hmid) throws TemplateNotFoundException, TemplateRenderException {

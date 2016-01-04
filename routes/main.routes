@@ -13,13 +13,16 @@ AuthController.check()
 GET  $/signout/?               AuthController.logoutProcess()
 
 
+GET  $/                        ViewController.index()
+
 GET  $/contacts/?              view("static/contacts.html")
 GET  $/about/?                 view("static/about.html")
 
 
 // Views
-GET  $/                        ViewController.viewChangesAll()
 GET  $/changes/?               ViewController.viewChangesAll()
+GET  $/changes/all/?           ViewController.viewChangesAll()
+GET  $/changes/add/?           ViewController.viewChangesAdd()
 
 GET  $/view/([a-zA-Z0-9]+)     ViewController.viewByHmid(1:String)
 

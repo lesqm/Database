@@ -6,6 +6,7 @@ import com.bunjlabs.fugaframework.sessions.Session;
 import com.bunjlabs.fugaframework.templates.TemplateNotFoundException;
 import com.bunjlabs.fugaframework.templates.TemplateRenderException;
 import com.google.gson.Gson;
+import io.netty.handler.codec.http.cookie.DefaultCookie;
 import java.nio.charset.Charset;
 import ru.lesqm.db.LesqmDatabaseApp;
 import ru.lesqm.db.Utils;
@@ -47,7 +48,7 @@ public class AuthController extends Controller {
 
         session.put("user-logined", true);
         session.put("user", u);
-
+        
         return ok(gson.toJson(new JsonOkUrl(urls.that()))).asJson();
     }
 
