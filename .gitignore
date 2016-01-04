@@ -12,3 +12,4 @@ nbactions.xml
 logs/
 
 fuga-lesqm.pid
+config/default.properties
