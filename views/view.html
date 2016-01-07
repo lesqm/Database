@@ -59,15 +59,15 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Ключевые слова</td>
+                            <td>Класс</td>
                             <td>
-                                <% for(var i = 0; i < data.getKeywords().size(); i++) { %><span class="badge alert-info"><# data.getKeywords().get(i).getName() #></span><% } %>
+                                <% for(var i = 0; i < data.getMClasses().size(); i++) { %><a href="@{api.that('search') + '?q=%22' + data.getMClasses().get(i).getName() + '%22'}" class="badge alert-info"><# data.getMClasses().get(i).getName() #></a><% } %>
                             </td>
                         </tr>
                         <tr>
-                            <td>Класс</td>
+                            <td>Ключевые слова</td>
                             <td>
-                                <% for(var i = 0; i < data.getMClasses().size(); i++) { %><span class="badge alert-info"><# data.getMClasses().get(i).getName() #></span><% } %>
+                                <% for(var i = 0; i < data.getKeywords().size(); i++) { %><a href="@{api.that('search') + '?q=%22' + data.getKeywords().get(i).getName() + '%22'}" class="badge alert-info"><# data.getKeywords().get(i).getName() #></a><% } %>
                             </td>
                         </tr>
                     </tbody>

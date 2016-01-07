@@ -24,6 +24,11 @@ public class SearchController extends Controller {
 
         List<Molecule> lm = db.searchMilecule(query);
         
+        for(Molecule m : lm) {
+            m.setMClasses(db.getMoleculeClasses(m.getId()));
+            m.setKeywords(db.getMoleculeKeywords(m.getId()));
+        }
+        
         return ok(view("search.html", lm));
     }
 }

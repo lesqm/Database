@@ -38,7 +38,7 @@
         <div id="left" class="no-resize">
             <form method="get" action="@{api.that('search')}" class='search-form'>
                 <div class="search-pane">
-                    <input type="text" name="q" placeholder="Поиск молекул">
+                    <input type="text" name="q" placeholder="Поиск молекул" value="@{ctx.getRequest().getQuery().get('q') != null ? api.escape(ctx.getRequest().getQuery().get('q').get(0)) : ''}">
                     <button type="submit"><i class="fa fa-search"></i></button>
                 </div>
             </form>
