@@ -31,8 +31,8 @@
                             <td><# hmid #></td>
                             <td><# m.getFormula() #></td>
                             <td class='hidden-350'><# m.getBaseName() #></td>
-                            <td><% for(var j = 0; j < m.getMClasses().size(); j++) { %><a href="@{that('search') + '?q=%22' + data.getMClasses().get(j).getName() + '%22'}" class="badge alert-info"><# data.getMClasses().get(j).getName() #></a><% } %></td>
-                            <td><% for(var j = 0; j < data.getKeywords().size(); j++) { %><a href="@{that('search') + '?q=%22' + data.getKeywords().get(j).getName() + '%22'}" class="badge alert-info"><# data.getKeywords().get(j).getName() #></a><% } %></td>
+                            <td><% for(var j = 0; j < m.getMClasses().size(); j++) { %><a href="@{that('search') + '?q=%22' + m.getMClasses().get(j).getName() + '%22'}" class="badge alert-info"><# m.getMClasses().get(j).getName() #></a><% } %></td>
+                            <td><% for(var j = 0; j < m.getKeywords().size(); j++) { %><a href="@{that('search') + '?q=%22' + m.getKeywords().get(j).getName() + '%22'}" class="badge alert-info"><# m.getKeywords().get(j).getName() #></a><% } %></td>
                             
                             <td class='hidden-480'>
                                 <a href="@{that('view', hmid)}" title="Открыть"><i class="fa fa-folder-open-o"></i></a>&nbsp;&nbsp;&nbsp;
