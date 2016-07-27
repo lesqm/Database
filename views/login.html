@@ -3,10 +3,18 @@
 <% block content %>
 <body class="login">
     <div class="wrapper">
-        <h1><a><img src="@{api.asset('img/logo-big.png')}" alt="" class="retina-ready" width="59" height="49">DB.LESQM</a></h1>
+        <h1><a><img src="@{asset('img/logo-big.png')}" alt="" class="retina-ready" width="59" height="49">DB.LESQM</a></h1>
         <div class="login-body">
             <h2>Вход</h2>
             <form class="form-validate" id="ajax-form">
+                <div class="form-group">
+                    <div class="db controls">
+                        <select name="db" class="form-control">
+                            <option value="1">База 1</option>
+                            <option value="2">База 2</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="email controls">
                         <input type="text" name='email' placeholder="Email" class="form-control">

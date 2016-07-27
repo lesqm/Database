@@ -15,20 +15,20 @@
                 <ul class="icon-nav">
                     <li class='dropdown language-select'>
                         <a href="#" class='dropdown-toggle' data-toggle="dropdown">
-                            <img src="@{api.asset('img/demo/flags/ru.png')}" alt="">
+                            <img src="@{asset('img/demo/flags/ru.png')}" alt="">
                             <span>RU</span>
                         </a>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="#"><img src="@{api.asset('img/demo/flags/us.gif')}" alt=""><span>English (недоступно)</span></a></li>
+                            <li><a href="#"><img src="@{asset('img/demo/flags/us.gif')}" alt=""><span>English (недоступно)</span></a></li>
                         </ul>
                     </li>
                 </ul>
                 <div class="dropdown">
-                    <a href="#" class='dropdown-toggle' data-toggle="dropdown"><# ctx.getSession().get('user').getName() #><img src="@{api.asset('img/user-enable.png')}" alt=""></a>
+                    <a href="#" class='dropdown-toggle' data-toggle="dropdown"><# ctx.getSession().get('user').getName() #><img src="@{asset('img/user-enable.png')}" alt=""></a>
                     <ul class="dropdown-menu pull-right">
                         <li><a href="#">Профиль (недоступно)</a></li>
                         <li><a href="#">Настройки (недоступно)</a></li>
-                        <li><a href="@{api.that('signout')}">Выйти</a></li>
+                        <li><a href="@{that('signout')}">Выйти</a></li>
                     </ul>
                 </div>
             </div>
@@ -36,9 +36,9 @@
     </div>
     <div class="container-fluid" id="content">
         <div id="left" class="no-resize">
-            <form method="get" action="@{api.that('search')}" class='search-form'>
+            <form method="get" action="@{that('search')}" class='search-form'>
                 <div class="search-pane">
-                    <input type="text" name="q" placeholder="Поиск молекул" value="@{ctx.getRequest().getQuery().get('q') != null ? api.escape(ctx.getRequest().getQuery().get('q').get(0)) : ''}">
+                    <input type="text" name="q" placeholder="Поиск молекул" value="@{ctx.getRequest().getQuery().get('q') != null ? escape(ctx.getRequest().getQuery().get('q').get(0)) : ''}">
                     <button type="submit"><i class="fa fa-search"></i></button>
                 </div>
             </form>
@@ -47,7 +47,7 @@
                     <a href="#" class='toggle-subnav'><i class="fa fa-angle-down"></i><span>Навигация</span></a>
                 </div>
                 <ul class="subnav-menu">
-                    <li><a href="@{api.that('add')}"><i class="fa fa-plus"></i> | Добавить соединение</a></li>
+                    <li><a href="@{that('add')}"><i class="fa fa-plus"></i> | Добавить соединение</a></li>
                     <!-- <li class='dropdown'>
                         <a href="#" data-toggle="dropdown">Инструкции</a>
                         <ul class="dropdown-menu">
@@ -56,10 +56,10 @@
                             <li><a href="#">Изменения</a></li>
                         </ul>
                     </li> -->
-                    <li><a href="@{api.that('changes/add')}"><i class="fa fa-refresh"></i> | Добавления</a></li>
-                    <li><a href="@{api.that('changes/all')}"><i class="fa fa-refresh"></i> | Все изменения</a></li>
-                    <li><a href="@{api.that('contacts')}"><i class="fa fa-envelope-o"></i> | Контакты</a></li>
-                    <li><a href="@{api.that('about')}"><i class="fa fa-gears"></i> | О системе</a></li>
+                    <li><a href="@{that('changes', 'add')}"><i class="fa fa-refresh"></i> | Добавления</a></li>
+                    <li><a href="@{that('changes', 'all')}"><i class="fa fa-refresh"></i> | Все изменения</a></li>
+                    <li><a href="@{that('contacts')}"><i class="fa fa-envelope-o"></i> | Контакты</a></li>
+                    <li><a href="@{that('about')}"><i class="fa fa-gears"></i> | О системе</a></li>
                 </ul>
             </div>
             <div class="subnav">
@@ -70,7 +70,7 @@
                     </a>
                 </div>
                 <%
-                var users = ctx.getApp().getDatabase().getUserAll();
+                var users = ctx.get('users');
                                 
                 %>
                 <div class="subnav-content">
@@ -79,7 +79,7 @@
 
                         <% var u = users.get(i); %>
                         <li>
-                            <a href="#"><img src="@{api.asset('img/user-alt.png')}" alt=""></a>
+                            <a href="#"><img src="@{asset('img/user-alt.png')}" alt=""></a>
                             <div class="user">
                                 <span class="name" style="white-space: nowrap; text-overflow: clip; width: 20px; display: block;"><# u.getName() #></span>
                                 <span class="position">Редактор</span>
@@ -97,8 +97,8 @@
                 <!--
                 <div class="breadcrumbs">
                     <ul>
-                        <li><a href="@{api.that()}">Главная</a><i class="fa fa-angle-right"></i></li>
-                        <li><a href="@{api.that('changes')}">Изменения</a></li>
+                        <li><a href="@{that()}">Главная</a><i class="fa fa-angle-right"></i></li>
+                        <li><a href="@{that('changes')}">Изменения</a></li>
                     </ul>
                 </div>
                 -->
@@ -108,7 +108,7 @@
         </div>
     </div>
     <div id="footer">
-        <p>DB.LESQM<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="#">Контакты</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="http://lesqm.ru">Лаборатория ЭСиКХМ</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>Создано на основе <a href="https://github.com/bunjlabs/Fuga-Framework">Fuga Framework</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>2015</p>
+        <p>DB.LESQM<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="#">Контакты</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="http://lesqm.ru">Лаборатория ЭСиКХМ</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>Создано на основе <a href="https://github.com/bunjlabs/Fuga-Framework">Fuga Framework</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>2015 - @{(new Date().getFullYear() + "")}</p>
         <a href="#" class="gototop">
             <i class="fa fa-arrow-up"></i>
         </a>

@@ -1,5 +1,5 @@
 @extends base/base_main.html
-<% block title %>- Редактировать соединение<% endblock %>
+<% block title %>- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ<% endblock %>
 <% block content %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
 <% var hmid = Molecule.hmid.encode(data.getId()); %>
@@ -99,7 +99,7 @@ if(data.getMClasses().size() - i != 1) classes += ", ";
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-                        <a href="@{api.that('view/' + hmid)}" class="btn">РћС‚РјРµРЅР°</a>
+                        <a href="@{that('view', hmid)}" class="btn">РћС‚РјРµРЅР°</a>
                     </div>
                 </form>
             </div>

@@ -1,56 +1,74 @@
 package ru.lesqm.db.controllers;
 
+import com.bunjlabs.fugaframework.dependency.Inject;
+import ru.lesqm.db.services.DatabaseService;
 import com.bunjlabs.fugaframework.foundation.Controller;
 import com.bunjlabs.fugaframework.foundation.Response;
 import com.bunjlabs.fugaframework.templates.TemplateNotFoundException;
 import com.bunjlabs.fugaframework.templates.TemplateRenderException;
 import java.util.List;
-import ru.lesqm.db.LesqmDatabaseApp;
 import ru.lesqm.db.logic.*;
 
 public class ViewController extends Controller {
 
-    public Response index() {
-        return seeOther(urls.that("changes/add"));
-    }
-    
-    public Response viewChangesAll() throws TemplateNotFoundException, TemplateRenderException {
-        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
+    private final DatabaseService db;
 
+    @Inject
+    public ViewController(DatabaseService db) {
+        this.db = db;
+    }
+
+    public Response index() {
+        return seeOther(urls.that("changes", "add"));
+    }
+
+    public Response viewChangesAll() throws TemplateNotFoundException, TemplateRenderException {
         List<Log> logList;
 
         if ((logList = db.getChangesAll()) == null) {
-            return notFoundDefault(ctx);
+            return notFound();
         }
 
-        return ok(view("changes.html", logList));
-    }
-    
-    public Response viewChangesAdd() throws TemplateNotFoundException, TemplateRenderException {
-        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
+        logList.forEach((m) -> {
+            m.setMClasses(db.getMoleculeClasses(m.getMid()));
+            m.setKeywords(db.getMoleculeKeywords(m.getMid()));
+        });
 
+        ctx.put("logList", logList);
+
+        return ok(view("changes.html"));
+    }
+
+    public Response viewChangesAdd() throws TemplateNotFoundException, TemplateRenderException {
         List<Log> logList;
 
         if ((logList = db.getChangesAdd()) == null) {
-            return notFoundDefault(ctx);
+            return notFound();
         }
 
-        return ok(view("adding.html", logList));
+        logList.forEach((m) -> {
+            m.setMClasses(db.getMoleculeClasses(m.getMid()));
+            m.setKeywords(db.getMoleculeKeywords(m.getMid()));
+        });
+
+        ctx.put("logList", logList);
+
+        return ok(view("adding.html"));
     }
 
     public Response viewByHmid(String hmid) throws TemplateNotFoundException, TemplateRenderException {
-        final Database db = ((LesqmDatabaseApp) ctx.getApp()).getDatabase();
-
         long[] mid = Molecule.hmid.decode(hmid.toLowerCase());
         Molecule m = null;
 
         if (mid.length == 0 || (m = db.getMoleculeById(mid[0])) == null) {
-            return notFoundDefault(ctx);
+            return notFound();
         }
 
         m.setKeywords(db.getMoleculeKeywords(m.getId()));
         m.setMClasses(db.getMoleculeClasses(m.getId()));
 
-        return ok(view("view.html", m));
+        ctx.put("m", m);
+
+        return ok(view("view.html"));
     }
 }

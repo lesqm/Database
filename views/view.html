@@ -1,6 +1,7 @@
 @extends base/base_main.html
 
 <% block content %>
+<% var data = ctx.get('m'); %>
 <% var Molecule = Java.type("ru.lesqm.db.logic.Molecule"); %>
 <% var hmid = Molecule.hmid.encode(data.getId()); %>
 <div class="page-header">
@@ -61,13 +62,13 @@
                         <tr>
                             <td>Класс</td>
                             <td>
-                                <% for(var i = 0; i < data.getMClasses().size(); i++) { %><a href="@{api.that('search') + '?q=%22' + data.getMClasses().get(i).getName() + '%22'}" class="badge alert-info"><# data.getMClasses().get(i).getName() #></a><% } %>
+                                <% for(var i = 0; i < data.getMClasses().size(); i++) { %><a href="@{that('search') + '?q=%22' + data.getMClasses().get(i).getName() + '%22'}" class="badge alert-info"><# data.getMClasses().get(i).getName() #></a><% } %>
                             </td>
                         </tr>
                         <tr>
                             <td>Ключевые слова</td>
                             <td>
-                                <% for(var i = 0; i < data.getKeywords().size(); i++) { %><a href="@{api.that('search') + '?q=%22' + data.getKeywords().get(i).getName() + '%22'}" class="badge alert-info"><# data.getKeywords().get(i).getName() #></a><% } %>
+                                <% for(var i = 0; i < data.getKeywords().size(); i++) { %><a href="@{that('search') + '?q=%22' + data.getKeywords().get(i).getName() + '%22'}" class="badge alert-info"><# data.getKeywords().get(i).getName() #></a><% } %>
                             </td>
                         </tr>
                     </tbody>
@@ -102,8 +103,8 @@
     <div class="col-sm-12">
         <div class="box">
             <div class="box-content">
-                <a href="@{api.that('edit/' + hmid)}" class="btn btn-primary">Редактировать</a>
-                <a href="@{api.that('delete/' + hmid)}" class="btn btn-danger">Удалить</a>
+                <a href="@{that('edit', hmid)}" class="btn btn-primary">Редактировать</a>
+                <a href="@{that('delete', hmid)}" class="btn btn-danger">Удалить</a>
             </div>
         </div>
     </div>

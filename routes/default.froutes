@@ -1,0 +1,43 @@
+use ru.lesqm.db.controllers
+
+// Static assets
+GET @/assets/(.*) asset(1)
+
+// Authentication
+@/signin/? {
+    GET  AuthController.login()
+    POST AuthController.loginProcess()
+}
+
+AuthController.check()
+
+GET  @/signout/?               AuthController.logoutProcess()
+
+BaseController.selectAllUsers()
+
+GET  @/                        ViewController.index()
+
+GET  @/contacts/?              view("static/contacts.html")
+GET  @/about/?                 view("static/about.html")
+
+
+// Views
+GET  @/changes/?               ViewController.viewChangesAll()
+GET  @/changes/all/?           ViewController.viewChangesAll()
+GET  @/changes/add/?           ViewController.viewChangesAdd()
+
+GET  @/view/([a-zA-Z0-9]+)     ViewController.viewByHmid(1:String)
+
+
+// Search
+GET  @/search/?                SearchController.search()
+
+
+// Data edit
+GET  @/add/?                   EditController.add()
+POST @/add/?                   EditController.addProcess()
+
+GET  @/edit/([a-zA-Z0-9]+)     EditController.edit(1:String)
+POST @/edit/([a-zA-Z0-9]+)     EditController.editProcess(1:String)
+
+GET  @/delete/([a-zA-Z0-9]+)   EditController.deleteProcess(1:String)

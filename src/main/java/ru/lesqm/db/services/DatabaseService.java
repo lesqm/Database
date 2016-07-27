@@ -1,23 +1,32 @@
-package ru.lesqm.db.logic;
+package ru.lesqm.db.services;
 
 import com.bunjlabs.fugaframework.FugaApp;
 import com.bunjlabs.fugaframework.configuration.Configuration;
+import com.bunjlabs.fugaframework.dependency.Inject;
+import com.bunjlabs.fugaframework.services.Service;
 import java.util.ArrayList;
 import java.util.List;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+import ru.lesqm.db.logic.Keyword;
+import ru.lesqm.db.logic.Log;
+import ru.lesqm.db.logic.MClass;
+import ru.lesqm.db.logic.Molecule;
+import ru.lesqm.db.logic.User;
 
-public class Database {
+public class DatabaseService extends Service {
 
     private final Configuration config;
     private final Sql2o sql2o;
 
-    public Database(FugaApp app) {
-        this.config = app.getConfiguration();
+    @Inject
+    public DatabaseService(Configuration config) {
+        this.config = config;
         this.sql2o = new Sql2o(
-                config.get("lesqm.db.path", "undefined"),
-                config.get("lesqm.db.user", "undefined"),
-                config.get("lesqm.db.password", "undefined"));
+                config.get("lesqm.db.path"),
+                config.get("lesqm.db.user"),
+                config.get("lesqm.db.password")
+        );
     }
 
     public List<Molecule> searchMilecule(String query) {
@@ -107,7 +116,7 @@ public class Database {
                     .executeAndFetch(Log.class);
         }
     }
-    
+
     public List<Log> getChangesAdd() {
         String sql
                 = "SELECT logs.*, users.name AS userName, molecule.formula, molecule.baseName, molecule.nomeName "

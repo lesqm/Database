@@ -25,13 +25,14 @@
                             <!-- <th>Ид.</th> -->
                             <th>Формула</th>
                             <th>Об. название</th>
-                            <th>Меж. ном.</th>
+                            <th>Класс</th>
                             <th>Автор</th>
                             <th>Тип</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <% var data = ctx.get('logList'); %>
                         <% for(var i = 0; i < data.size(); i++ ) { %>
 
                         <% var m = data.get(i); %>
@@ -48,13 +49,13 @@
                             <!-- <td><# hmid #></td> -->
                             <td><% if(m.getType() != 3 && m.getFormula() != null ) { %><# m.getFormula() #><% } %></td>
                             <td><% if(m.getType() != 3 && m.getBaseName() != null ) { %><# m.getBaseName() #><% } %></td>
-                            <td><% if(m.getType() != 3 && m.getNomeName() != null ) { %><# m.getNomeName() #><% } %></td>
+                            <td><% if(m.getType() != 3 && m.getMClasses() != null ) { %><% for(var j = 0; j < m.getMClasses().size(); j++) { %><a href="@{that('search') + '?q=%22' + m.getMClasses().get(j).getName() + '%22'}" class="badge alert-info"><# m.getMClasses().get(j).getName() #></a><% } %><% } %></td>
                             <td><# m.getUserName() #></td>
                             <td><# ctype #></td>
                             <td>
-                                <a href="@{api.that('view/' + hmid)}" title="Открыть"><i class="fa fa-folder-open-o"></i></a>&nbsp;&nbsp;&nbsp;
-                                <a href="@{api.that('edit/' + hmid)}" title="Редактировать"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
-				<a href="@{api.that('delete/' + hmid)}" title="Удалить"><i class="fa fa-remove"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="@{that('view', hmid)}" title="Открыть"><i class="fa fa-folder-open-o"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="@{that('edit', hmid)}" title="Редактировать"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
+				<a href="@{that('delete', hmid)}" title="Удалить"><i class="fa fa-remove"></i></a>&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <% } %>

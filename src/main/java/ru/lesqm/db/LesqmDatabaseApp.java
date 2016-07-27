@@ -1,26 +1,20 @@
 package ru.lesqm.db;
 
 import com.bunjlabs.fugaframework.FugaApp;
-import ru.lesqm.db.logic.Database;
+import ru.lesqm.db.services.DatabaseService;
 
 public class LesqmDatabaseApp extends FugaApp {
-
-    private Database database;
 
     @Override
     public void prepare() {
 
-        getRouter().load("routes/main.routes");
-        getConfiguration().load("config/default.properties");
+        getRouter().load("default.froutes");
+        getConfiguration().load("default.properties");
 
-        database = new Database(this);
+        getServiceManager().register(DatabaseService.class);
     }
-    
+
     public static void main(String args[]) throws Exception {
-        new LesqmDatabaseApp().start();
-    }
-
-    public Database getDatabase() {
-        return database;
+        launch(LesqmDatabaseApp.class);
     }
 }

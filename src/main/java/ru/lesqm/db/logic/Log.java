@@ -1,6 +1,7 @@
 package ru.lesqm.db.logic;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Log {
 
@@ -13,6 +14,8 @@ public class Log {
     private String formula;
     private String baseName;
     private String nomeName;
+    private List<MClass> mclass;
+    private List<Keyword> keywords;
 
     public Long getId() {
         return id;
@@ -72,6 +75,22 @@ public class Log {
 
     public void setMid(Long mid) {
         this.mid = mid;
+    }
+
+    public void setMClasses(List<MClass> mclass) {
+        this.mclass = mclass;
+    }
+
+    public List<MClass> getMClasses() {
+        return mclass;
+    }
+
+    public List<Keyword> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<Keyword> keywords) {
+        this.keywords = keywords;
     }
 
 }

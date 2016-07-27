@@ -1,4 +1,4 @@
-package ru.lesqm.db;
+package ru.lesqm.db.utils;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
