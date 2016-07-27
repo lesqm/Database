@@ -55,7 +55,32 @@
             </div>
             <script>
                 $(document).ready(function () {
-                    $('#searchTable').DataTable();
+                    $('#searchTable').DataTable({
+                        "language": {
+                            "decimal": "",
+                            "emptyTable": "Нет данных для отображения",
+                            "info": "Отображено с _START_ по _END_ из _TOTAL_ элементов",
+                            "infoEmpty": "Нечего отображать",
+                            "infoFiltered": "(filtered from _MAX_ total entries)",
+                            "infoPostFix": "",
+                            "thousands": ",",
+                            "lengthMenu": "Отображать по _MENU_ элементов",
+                            "loadingRecords": "Загрузка...",
+                            "processing": "Обработка...",
+                            "search": "Поиск:",
+                            "zeroRecords": "Подходящих элементов не найдено",
+                            "paginate": {
+                                "first": "Первая",
+                                "last": "Последняя",
+                                "next": "Далее",
+                                "previous": "Назад"
+                            },
+                            "aria": {
+                                "sortAscending": ": activate to sort column ascending",
+                                "sortDescending": ": activate to sort column descending"
+                            }
+                        }
+                    });
                 });
             </script>
         </div>
